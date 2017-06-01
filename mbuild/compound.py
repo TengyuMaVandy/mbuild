@@ -124,6 +124,7 @@ class Compound(object):
         Other compounds that reference this part with labels.
 
     """
+
     def __init__(self, subcompounds=None, name=None, pos=None, charge=0.0,
                  periodicity=None, port_particle=False):
         super(Compound, self).__init__()
@@ -507,13 +508,13 @@ class Compound(object):
                 """Visualize the Compound using imolecule. """
                 import imolecule
                 json_mol = self._to_json(show_ports)
-                imolecule.draw(json_mol, format='json', shader='lambert',
-                               drawing_type='ball and stick', camera_type='perspective',
-                               element_properties=None)
+                return imolecule.draw(json_mol, format='json', shader='lambert',
+                                      drawing_type='ball and stick', camera_type='perspective',
+                                      element_properties=None)
 
             except ImportError:
                 raise RuntimeError('Visualization is only supported in Jupyter '
-                                                      'Notebooks.')
+                                   'Notebooks.')
 
     def _to_json(self, show_ports=False):
         import imolecule
@@ -521,9 +522,9 @@ class Compound(object):
 
         for idx, particle in enumerate(self._particles(include_ports=show_ports)):
             particle.index = idx
-            atoms.append({'element': particle.name,'location': list(np.asarray(particle.pos, dtype=float) * 10)})
+            atoms.append({'element': particle.name, 'location': list(np.asarray(particle.pos, dtype=float) * 10)})
 
-        bonds = [{'atoms': [atom1.index, atom2.index],'order': 1} for atom1, atom2 in self.bonds()]
+        bonds = [{'atoms': [atom1.index, atom2.index], 'order': 1} for atom1, atom2 in self.bonds()]
         output = {'name': self.name, 'atoms': atoms, 'bonds': bonds}
 
         # Remove the index attribute on particles.
@@ -1059,5 +1060,6 @@ class Compound(object):
         newone = clone_of[self]
         for c1, c2 in self.bonds():
             newone.add_bond((clone_of[c1], clone_of[c2]))
+
 
 Particle = Compound
